@@ -1,7 +1,7 @@
 /*
  * I created this to test my new MeArm v1.1 using 10k Trimpots to check the servos and their limits against the chassis
  * I used: 
- * an Arduino Uno c/w lead
+ * an Arduino Uno c/w lead (used PWM Able pins 6,9,10,11, and Analogue pins 0,1,2,3)
  * x1 MeArm v1.1 rig
  * x4 SG90 Servos
  * x4 10k Trimpots
