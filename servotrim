@@ -1,0 +1,61 @@
+/*
+ * I created this to test my new MeArm v1.1 using 10k Trimpots to check the servos and their limits against the chassis
+ * I used: 
+ * an Arduino Uno c/w lead
+ * x1 MeArm v1.1 rig
+ * x4 SG90 Servos
+ * x4 10k Trimpots
+ * x9 red male to male 15cm jumper wires
+ * x9 black male to mail 15cm jumper wires
+ * x9 white male to mail 15cm jumper wires
+ * x9 yellow male to mail 15cm jumper wires
+ */
+#include <Servo.h>  // add servo library
+
+Servo base;  // create servo object to base servo controlling base rotation
+Servo left;  // create servo object to left servo controlling the reach servo
+Servo right;  // create servo object to right servo controlling the vertical servo
+Servo claw;  // create servo object to claw servo - yep controlling the claw!
+
+int basepot = 0;  // analog 0 pin used to connect the potentiometer
+int val0 = 60;    // variable to read the value from the analog pin set to 60 centering the base
+int leftpot = 1;  // analog 1 pin used to connect the potentiometer
+int val1 = 140;    // variable to read the value from the analog pin set to mid-stretch
+int rightpot = 2;  // analog 2 pin used to connect the potentiometer
+int val2 = 40;    // variable to read the value from the analog pin set to mid height
+int clawpot = 3;  // analog 3 pin used to connect the potentiometer
+int val3 = 180;    // variable to read the value from the analog pin set to close the claw
+
+void setup() {
+  base.attach(9);  // attaches the base servo on pin 9 to the servo object base
+  base.write(val0); // sets the base to centre
+  delay(1000); // gives the servo time to settle
+  left.attach(10);  // attaches the left servo on pin 10 to the servo object left
+  left.write(val1); // sets the reach to centre
+  delay(1000); // gives the servo time to settle
+  right.attach(11);  // attaches the right / vertical servo on pin 11 to the servo object right
+  right.write(val2); // sets the servo to mid height
+  delay(1000);  // gives the servo time to settle
+  claw.attach(6);  // attaches the claw servo on pin 6 to the servo object claw
+  claw.write(val3); // closes the claw
+  delay(1000); // gives the servo time to settle
+}
+// NOTE - it's an idea to set the trimpots to centre to avoid crashing joints!!!
+void loop() {
+  val0 = analogRead(basepot);            // reads the value of the potentiometer (value between 0 and 1023)
+  val0 = map(val0, 0, 1023, 0, 150);     // scale it to use it with the servo (value between 0 and 180)
+  base.write(val0);                  // sets the servo position according to the scaled value
+  delay(15);                           // waits for the servo to get there
+  val1 = analogRead(leftpot);            // reads the value of the potentiometer (value between 0 and 1023)
+  val1 = map(val1, 0, 1023, 0, 160);     // scale it to use it with the servo (value between 0 and 180)
+  left.write(val1);                  // sets the servo position according to the scaled value
+  delay(15);                           // waits for the servo to get there
+  val2 = analogRead(rightpot);            // reads the value of the potentiometer (value between 0 and 1023)
+  val2 = map(val2, 0, 1023, 0, 160);     // scale it to use it with the servo (value between 0 and 180)
+  right.write(val2);                  // sets the servo position according to the scaled value
+  delay(15);                           // waits for the servo to get there
+  val3 = analogRead(clawpot);            // reads the value of the potentiometer (value between 0 and 1023)
+  val3 = map(val3, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
+  claw.write(val3);                  // sets the servo position according to the scaled value
+  delay(15);  // waits for the servo to get there
+}
