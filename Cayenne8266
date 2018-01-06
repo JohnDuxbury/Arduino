@@ -1,0 +1,50 @@
+// This example shows how to connect to Cayenne using an ESP8266 and send/receive sample data.
+// Make sure you install the ESP8266 Board Package via the Arduino IDE Board Manager and select the correct ESP8266 board before compiling. 
+
+#define CAYENNE_DEBUG
+#define CAYENNE_PRINT Serial
+#include <CayenneMQTTESP8266.h>
+#include <DHT.h>
+#define LEDPin 5
+#define DHTPin 2
+DHT dht;
+
+// WiFi network info.
+char ssid[] = "My SSID";
+char wifiPassword[] = "My Wifi Password";
+
+// Cayenne authentication info. This should be obtained from the Cayenne Dashboard.
+char username[] = "Yep";
+char password[] = "I'm not";
+char clientID[] = "Telling You!";
+
+unsigned long lastMillis = 0;
+
+void setup() {
+	Serial.begin(115200);
+  dht.setup(DHTPin);
+	Cayenne.begin(username, password, clientID, ssid, wifiPassword);
+  pinMode(LEDPin, OUTPUT);
+  digitalWrite(LEDPin, LOW);
+}
+
+void loop() {
+	Cayenne.loop();
+  float uptime = millis()/1000;
+  float temp = dht.getTemperature();
+  float hum = dht.getHumidity();
+  float light = analogRead(0);
+  Cayenne.virtualWrite(0, uptime);    
+  Cayenne.virtualWrite(2, temp, TYPE_TEMPERATURE, UNIT_CELSIUS);
+  Cayenne.virtualWrite(3, hum, TYPE_RELATIVE_HUMIDITY, UNIT_PERCENT);
+  Cayenne.virtualWrite(4, light);
+    Serial.print(temp);
+    Serial.print(hum);
+    Serial.print(light);
+  delay(1000);
+}
+
+CAYENNE_IN(1)
+{
+  digitalWrite(LEDPin, getValue.asInt());
+  }
